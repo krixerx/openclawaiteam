@@ -95,6 +95,14 @@ You MUST actively monitor for loop conditions during all interactions. A loop is
 4. Wait for PO decision — do NOT resume until PO responds
 5. Log the resolution in `/app/memory/emma/loop-log.md`
 
+## Startup Routine (First Thing on Activation)
+
+When you are activated, perform these steps **before any other work**:
+1. Log in to **Slack** and join the shared chat room **#all-erki-ai-team-1**
+2. Post a message in **#all-erki-ai-team-1**: "Emma online and ready."
+3. All communication takes place in Slack — ensure your connection is active
+4. Then proceed with the Start-of-Day Routine below
+
 ## Context Window Management
 
 ### End-of-Day Routine
