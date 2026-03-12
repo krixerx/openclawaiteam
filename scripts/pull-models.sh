@@ -1,21 +1,57 @@
 #!/bin/bash
-# Pull all required models into the shared Ollama instance.
-# Run after the Ollama container is up: docker compose up -d ollama && ./scripts/pull-models.sh
+# Verify Groq API access and available models.
+# Run after setting GROQ_API_KEY in your .env file.
 
 set -euo pipefail
 
-OLLAMA_CONTAINER="ollama"
+if [ -z "${GROQ_API_KEY:-}" ]; then
+  if [ -f .env ]; then
+    export $(grep -E '^GROQ_API_KEY=' .env | xargs)
+  fi
+fi
 
-echo "Pulling models into Ollama..."
+if [ -z "${GROQ_API_KEY:-}" ]; then
+  echo "ERROR: GROQ_API_KEY is not set. Add it to your .env file."
+  echo "Get your API key at: https://console.groq.com"
+  exit 1
+fi
 
-echo "[1/3] Pulling qwen3-coder:32b (Emma & Morgan - planning/architecture)..."
-docker exec "$OLLAMA_CONTAINER" ollama pull qwen3-coder:32b
+echo "Verifying Groq API access..."
 
-echo "[2/3] Pulling qwen3-coder:8b (Sean - code generation/QA)..."
-docker exec "$OLLAMA_CONTAINER" ollama pull qwen3-coder:8b
+echo ""
+echo "Checking available models..."
+curl -s https://api.groq.com/openai/v1/models \
+  -H "Authorization: Bearer $GROQ_API_KEY" | \
+  python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+if 'error' in data:
+    print(f\"ERROR: {data['error']['message']}\")
+    sys.exit(1)
+models = [m['id'] for m in data['data']]
+targets = ['qwen3-32b', 'qwen-2.5-coder-32b']
+print('Available target models:')
+for t in targets:
+    status = 'AVAILABLE' if t in models else 'NOT FOUND'
+    print(f'  {t}: {status}')
+print(f'\nTotal models on Groq: {len(models)}')
+"
 
-echo "[3/3] Pulling glm-4.7-flash (all agents - fallback)..."
-docker exec "$OLLAMA_CONTAINER" ollama pull glm-4.7-flash
-
-echo "All models pulled successfully."
-docker exec "$OLLAMA_CONTAINER" ollama list
+echo ""
+echo "Running quick inference test with qwen-2.5-coder-32b..."
+curl -s https://api.groq.com/openai/v1/chat/completions \
+  -H "Authorization: Bearer $GROQ_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen-2.5-coder-32b",
+    "messages": [{"role": "user", "content": "Say hello in one sentence."}],
+    "max_tokens": 50
+  }' | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+if 'error' in data:
+    print(f\"ERROR: {data['error']['message']}\")
+    sys.exit(1)
+print(f\"Response: {data['choices'][0]['message']['content']}\")
+print('Groq API is working!')
+"
