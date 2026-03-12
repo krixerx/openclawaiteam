@@ -6,23 +6,24 @@ Create three workspace-level service accounts in Bitbucket:
 
 | Account | Handle | Role |
 |---------|--------|------|
-| Emma AI Lead | `emma-ai-lead` | Read-only repository access, PR status tracking |
-| Morgan AI Arch | `morgan-ai-arch` | PR review, design compliance comments |
-| Sean AI Dev | `sean-ai-dev` | PR creation, commits, branch management |
+| Emma AI Lead | `emma-ai-lead` | Read, commit, push, PR status tracking |
+| Morgan AI Arch | `morgan-ai-arch` | Read, commit, push, PR review, design compliance |
+| Sean AI Dev | `sean-ai-dev` | Read, commit, push, PR creation, branch management |
 
 ## 2. Generate App Passwords
 
 For each service account, create a scoped app password at:
 `Bitbucket Settings > Personal Settings > App passwords`
 
-### emma-ai-lead (read-only)
-- Repositories: Read
+### emma-ai-lead
+- Repositories: Read, Write
+- Pull requests: Read, Write, Create
 
-### morgan-ai-arch (reviewer)
-- Repositories: Read
-- Pull requests: Read, Write (for review comments)
+### morgan-ai-arch
+- Repositories: Read, Write
+- Pull requests: Read, Write, Create
 
-### sean-ai-dev (developer)
+### sean-ai-dev
 - Repositories: Read, Write
 - Pull requests: Read, Write, Create
 
@@ -42,7 +43,7 @@ SEAN_BITBUCKET_APP_PASSWORD=<generated-password>
 
 ## 4. Install OpenClaw Bitbucket Skill
 
-After containers are running, install the Bitbucket skill from ClawHub in Sean's and Morgan's containers. Emma uses read-only access for status tracking only.
+After containers are running, install the Bitbucket skill from ClawHub in all three agent containers (Emma, Morgan, and Sean). All agents have full read/write repository access.
 
 ## 5. Test PR Workflow
 
