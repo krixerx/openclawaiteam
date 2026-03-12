@@ -14,7 +14,25 @@
       "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions apply --change \"openclaw-ai-team-setup\" --json 2>&1 | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Progress: {d[\\\\\"progress\\\\\"][\\\\\"complete\\\\\"]}/{d[\\\\\"progress\\\\\"][\\\\\"total\\\\\"]} tasks complete'\\); remaining=[t for t in d['tasks'] if not t['done']]; [print\\(f'  - [ ] {t[\\\\\"description\\\\\"]}'\\) for t in remaining]\")",
       "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions apply --change \"openclaw-ai-team-setup\" --json 2>&1 | grep -E '\"\\(complete|remaining|total\\)\"')",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote:*)",
+      "WebFetch(domain:hub.docker.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(ls -la \"C:\\\\Users\\\\kriks\\\\eclipse-workspace\\\\OpenClawATeam\" | grep -E \"\\\\.\\(yaml|yml|json|conf|config\\)$\")",
+      "Bash(docker info:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker run:*)",
+      "WebFetch(domain:docs.openclaw.ai)",
+      "WebFetch(domain:lumadock.com)",
+      "Bash(docker logs:*)",
+      "Bash(docker rm:*)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam status)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam diff)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam log --oneline -5)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam remote -v)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam add README.md .env.example docker-compose.yml config/loki/loki-config.yml config/slack/channel-config.json agents/emma/IDENTITY.md agents/emma/WORKFLOWS.md agents/morgan/IDENTITY.md agents/morgan/WORKFLOWS.md agents/sean/IDENTITY.md agents/sean/WORKFLOWS.md agents/sean/BRAIN.md .claude/settings.local.json)"
     ]
   }
 }

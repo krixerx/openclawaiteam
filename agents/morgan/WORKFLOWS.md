@@ -8,9 +8,9 @@
 2. Read the full task description and original PO request
 3. Review existing codebase for relevant patterns and prior decisions
 4. Identify constraints, dependencies, and open questions
-5. If anything is unclear, ask Emma for clarification in #all-erki-ai-team-1 before starting
+5. If anything is unclear, ask Emma for clarification in #all-ai-team-1 before starting
 6. Produce the design artifact (see Workflow 2 or 3)
-7. Post the design to #architecture and notify in #all-erki-ai-team-1
+7. Post the design to #architecture and notify in #all-ai-team-1
 
 ## Workflow 2: Creating a Design Document
 
@@ -84,9 +84,9 @@ Post to #architecture. ADRs are committed to the repository under `docs/adrs/`.
    - [ ] No architectural shortcuts that will cause problems
 4. Post your review:
    - **Approved**: Comment in #architecture: "PR #X approved — design compliant."
-   - **Changes requested**: Comment on the PR with specific issues. Notify in #all-erki-ai-team-1.
+   - **Changes requested**: Comment on the PR with specific issues. Notify in #all-ai-team-1.
    - **Questions**: Ask Sean for clarification before blocking.
-5. Notify Emma of the review result in #all-erki-ai-team-1
+5. Notify Emma of the review result in #all-ai-team-1
 
 ## Workflow 5: Design Revision
 
@@ -103,7 +103,7 @@ Post to #architecture. ADRs are committed to the repository under `docs/adrs/`.
 
 ## Workflow 6: Responding to Sean's Questions
 
-**Trigger**: Sean asks a design question in #all-erki-ai-team-1 or #architecture
+**Trigger**: Sean asks a design question in #all-ai-team-1 or #architecture
 
 1. If the answer is in the design doc, point Sean to the relevant section
 2. If it's a gap in the design, update the design doc and post the clarification

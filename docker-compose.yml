@@ -1,90 +1,115 @@
 services:
   # === AI Agent Services ===
 
+  openclaw-emma-init:
+    image: alpine/openclaw:latest
+    container_name: openclaw-emma-init
+    user: root
+    entrypoint: sh
+    command: -c "chown -R node:node /home/node/.openclaw && mkdir -p /home/node/.openclaw/workspace && cp /tmp/agent/IDENTITY.md /home/node/.openclaw/workspace/IDENTITY.md && cp /tmp/agent/BRAIN.md /home/node/.openclaw/workspace/BRAIN.md && cp /tmp/agent/WORKFLOWS.md /home/node/.openclaw/workspace/WORKFLOWS.md && chown -R node:node /home/node/.openclaw/workspace"
+    volumes:
+      - emma-state:/home/node/.openclaw
+      - ./agents/emma/IDENTITY.md:/tmp/agent/IDENTITY.md:ro
+      - ./agents/emma/BRAIN.md:/tmp/agent/BRAIN.md:ro
+      - ./agents/emma/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
+
   openclaw-emma:
-    image: openclaw/openclaw:latest
+    image: alpine/openclaw:latest
     container_name: openclaw-emma
     restart: unless-stopped
+    depends_on:
+      openclaw-emma-init:
+        condition: service_completed_successfully
     environment:
       - OPENCLAW_AGENT_NAME=Emma
       - OPENCLAW_ROLE=project-lead
       - OPENCLAW_MODEL=${EMMA_MODEL:-qwen3-32b}
       - OPENCLAW_FALLBACK_MODEL=${FALLBACK_MODEL:-qwen-2.5-coder-32b}
-      - OPENCLAW_API_BASE=https://api.groq.com/openai/v1
-      - OPENCLAW_API_KEY=${GROQ_API_KEY}
-      - SLACK_BOT_TOKEN=${EMMA_SLACK_BOT_TOKEN}
-      - SLACK_APP_TOKEN=${EMMA_SLACK_APP_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_APP_TOKEN=${SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${EMMA_BITBUCKET_USERNAME}
       - BITBUCKET_APP_PASSWORD=${EMMA_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
     volumes:
+      - emma-state:/home/node/.openclaw
       - emma-memory:/app/memory
-      - ./agents/emma/IDENTITY.md:/app/IDENTITY.md:ro
-      - ./agents/emma/BRAIN.md:/app/BRAIN.md:ro
-      - ./agents/emma/WORKFLOWS.md:/app/WORKFLOWS.md:ro
     networks:
       - ai-team-net
 
+  openclaw-morgan-init:
+    image: alpine/openclaw:latest
+    container_name: openclaw-morgan-init
+    user: root
+    entrypoint: sh
+    command: -c "chown -R node:node /home/node/.openclaw && mkdir -p /home/node/.openclaw/workspace && cp /tmp/agent/IDENTITY.md /home/node/.openclaw/workspace/IDENTITY.md && cp /tmp/agent/BRAIN.md /home/node/.openclaw/workspace/BRAIN.md && cp /tmp/agent/WORKFLOWS.md /home/node/.openclaw/workspace/WORKFLOWS.md && chown -R node:node /home/node/.openclaw/workspace"
+    volumes:
+      - morgan-state:/home/node/.openclaw
+      - ./agents/morgan/IDENTITY.md:/tmp/agent/IDENTITY.md:ro
+      - ./agents/morgan/BRAIN.md:/tmp/agent/BRAIN.md:ro
+      - ./agents/morgan/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
+
   openclaw-morgan:
-    image: openclaw/openclaw:latest
+    image: alpine/openclaw:latest
     container_name: openclaw-morgan
     restart: unless-stopped
+    depends_on:
+      openclaw-morgan-init:
+        condition: service_completed_successfully
     environment:
       - OPENCLAW_AGENT_NAME=Morgan
       - OPENCLAW_ROLE=architect
       - OPENCLAW_MODEL=${MORGAN_MODEL:-qwen3-32b}
       - OPENCLAW_FALLBACK_MODEL=${FALLBACK_MODEL:-qwen-2.5-coder-32b}
-      - OPENCLAW_API_BASE=https://api.groq.com/openai/v1
-      - OPENCLAW_API_KEY=${GROQ_API_KEY}
-      - SLACK_BOT_TOKEN=${MORGAN_SLACK_BOT_TOKEN}
-      - SLACK_APP_TOKEN=${MORGAN_SLACK_APP_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_APP_TOKEN=${SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${MORGAN_BITBUCKET_USERNAME}
       - BITBUCKET_APP_PASSWORD=${MORGAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
     volumes:
+      - morgan-state:/home/node/.openclaw
       - morgan-memory:/app/memory
-      - ./agents/morgan/IDENTITY.md:/app/IDENTITY.md:ro
-      - ./agents/morgan/BRAIN.md:/app/BRAIN.md:ro
-      - ./agents/morgan/WORKFLOWS.md:/app/WORKFLOWS.md:ro
     networks:
       - ai-team-net
 
+  openclaw-sean-init:
+    image: alpine/openclaw:latest
+    container_name: openclaw-sean-init
+    user: root
+    entrypoint: sh
+    command: -c "chown -R node:node /home/node/.openclaw && mkdir -p /home/node/.openclaw/workspace && cp /tmp/agent/IDENTITY.md /home/node/.openclaw/workspace/IDENTITY.md && cp /tmp/agent/BRAIN.md /home/node/.openclaw/workspace/BRAIN.md && cp /tmp/agent/WORKFLOWS.md /home/node/.openclaw/workspace/WORKFLOWS.md && chown -R node:node /home/node/.openclaw/workspace"
+    volumes:
+      - sean-state:/home/node/.openclaw
+      - ./agents/sean/IDENTITY.md:/tmp/agent/IDENTITY.md:ro
+      - ./agents/sean/BRAIN.md:/tmp/agent/BRAIN.md:ro
+      - ./agents/sean/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
+
   openclaw-sean:
-    image: openclaw/openclaw:latest
+    image: alpine/openclaw:latest
     container_name: openclaw-sean
     restart: unless-stopped
+    depends_on:
+      openclaw-sean-init:
+        condition: service_completed_successfully
     environment:
       - OPENCLAW_AGENT_NAME=Sean
       - OPENCLAW_ROLE=developer-qa
       - OPENCLAW_MODEL=${SEAN_MODEL:-qwen-2.5-coder-32b}
       - OPENCLAW_FALLBACK_MODEL=${FALLBACK_MODEL:-qwen3-32b}
-      - OPENCLAW_API_BASE=https://api.groq.com/openai/v1
-      - OPENCLAW_API_KEY=${GROQ_API_KEY}
-      - SLACK_BOT_TOKEN=${SEAN_SLACK_BOT_TOKEN}
-      - SLACK_APP_TOKEN=${SEAN_SLACK_APP_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_APP_TOKEN=${SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${SEAN_BITBUCKET_USERNAME}
       - BITBUCKET_APP_PASSWORD=${SEAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
     volumes:
+      - sean-state:/home/node/.openclaw
       - sean-memory:/app/memory
-      - ./agents/sean/IDENTITY.md:/app/IDENTITY.md:ro
-      - ./agents/sean/BRAIN.md:/app/BRAIN.md:ro
-      - ./agents/sean/WORKFLOWS.md:/app/WORKFLOWS.md:ro
     networks:
       - ai-team-net
 
   # === Shared Services ===
-
-  portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    restart: unless-stopped
-    ports:
-      - "9000:9000"
-    volumes:
-      - portainer-data:/data
-    networks:
-      - ai-team-net
 
   loki:
     image: grafana/loki:latest
@@ -132,9 +157,11 @@ networks:
     driver: bridge
 
 volumes:
+  emma-state:
   emma-memory:
+  morgan-state:
   morgan-memory:
+  sean-state:
   sean-memory:
-  portainer-data:
   loki-data:
   grafana-data:

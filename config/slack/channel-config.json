@@ -1,45 +1,15 @@
 {
   "channels": [
     {
-      "name": "po-commands",
-      "purpose": "Product Owner issues tasks, STOP commands, and overrides",
-      "writers": ["product-owner"],
-      "readers": ["emma-bot", "morgan-bot", "sean-bot"],
-      "audit_log": true
-    },
-    {
-      "name": "pm-tasks",
-      "purpose": "Emma posts assignments, progress summaries, and blockers",
-      "writers": ["emma-bot"],
-      "readers": ["morgan-bot", "sean-bot", "product-owner"]
-    },
-    {
-      "name": "architecture",
-      "purpose": "Morgan posts design decisions, ADRs, and review requests",
-      "writers": ["morgan-bot"],
-      "readers": ["emma-bot", "sean-bot", "product-owner"]
-    },
-    {
-      "name": "dev-updates",
-      "purpose": "Sean posts PR links, test results, and build status",
-      "writers": ["sean-bot"],
-      "readers": ["emma-bot", "morgan-bot", "product-owner"]
-    },
-    {
-      "name": "general",
-      "purpose": "Cross-team discussion and announcements",
+      "name": "all-ai-team-1",
+      "purpose": "Main communication channel for all agents and PO",
       "writers": ["emma-bot", "morgan-bot", "sean-bot", "product-owner"],
-      "readers": ["emma-bot", "morgan-bot", "sean-bot", "product-owner"]
-    },
-    {
-      "name": "loop-alerts",
-      "purpose": "Loop detection alerts — PO approval required to continue",
-      "writers": ["emma-bot", "morgan-bot", "sean-bot"],
-      "readers": ["product-owner"]
+      "readers": ["emma-bot", "morgan-bot", "sean-bot", "product-owner"],
+      "audit_log": true
     }
   ],
   "po_command_routing": {
-    "description": "Commands sent to non-#po-commands channels are acknowledged in the original channel and routed to #po-commands for audit logging",
-    "target_channel": "po-commands"
+    "description": "All PO commands are sent and logged in #all-ai-team-1",
+    "target_channel": "all-ai-team-1"
   }
 }

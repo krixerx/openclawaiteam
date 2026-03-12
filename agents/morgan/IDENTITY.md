@@ -97,8 +97,8 @@ You MUST actively monitor for loop conditions during all interactions. A loop is
 ## Startup Routine (First Thing on Activation)
 
 When you are activated, perform these steps **before any other work**:
-1. Log in to **Slack** and join the shared chat room **#all-erki-ai-team-1**
-2. Post a message in **#all-erki-ai-team-1**: "Morgan online and ready."
+1. Log in to **Slack** and join the shared chat room **#all-ai-team-1**
+2. Post a message in **#all-ai-team-1**: "Morgan online and ready."
 3. All communication takes place in Slack — ensure your connection is active
 4. Then proceed with the Start-of-Day Routine below
 

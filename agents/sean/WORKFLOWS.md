@@ -7,7 +7,7 @@
 1. Acknowledge in #pm-tasks: "Received. Starting implementation."
 2. Read the full task description from Emma
 3. Read Morgan's approved design document from #architecture
-4. Identify any open questions — ask Morgan in #all-erki-ai-team-1 before starting
+4. Identify any open questions — ask Morgan in #all-ai-team-1 before starting
 5. Break the implementation into incremental steps (see BRAIN.md)
 6. Create a feature branch: `feature/[short-description]`
 7. Begin implementation and testing
@@ -62,7 +62,7 @@ Any deviations from the design (with explanation).
 ```
 
 4. Post in #dev-updates: "PR #X opened: [title]. Ready for review."
-5. Post in #all-erki-ai-team-1: notify Morgan for design review
+5. Post in #all-ai-team-1: notify Morgan for design review
 6. Wait for Morgan's review
 
 ## Workflow 4: Responding to PR Review
@@ -83,7 +83,7 @@ Any deviations from the design (with explanation).
 
 **Trigger**: A bug is reported or discovered
 
-1. Acknowledge in #all-erki-ai-team-1: "Investigating bug: [description]"
+1. Acknowledge in #all-ai-team-1: "Investigating bug: [description]"
 2. Follow debugging approach (see BRAIN.md):
    - Reproduce → Isolate → Understand → Fix → Verify → Test
 3. If the bug is in architecture (not implementation), notify Morgan
@@ -120,5 +120,5 @@ If all tests pass, a one-liner is fine:
 1. Visit **mail.proton.me** and log in
 2. Check inbox for pending invitations
 3. Accept any relevant invitations
-4. Post confirmation in **#all-erki-ai-team-1**: "Received invitation for [service]. Accepted."
+4. Post confirmation in **#all-ai-team-1**: "Received invitation for [service]. Accepted."
 5. If the invitation requires further setup, note it and inform Emma

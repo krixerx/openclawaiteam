@@ -8,7 +8,7 @@
 2. Parse the request — identify goal, constraints, acceptance criteria
 3. If unclear, ask PO for clarification in #po-commands. Do NOT proceed on assumptions.
 4. Decompose into sub-tasks (see BRAIN.md — Task Decomposition Strategy)
-5. Post task breakdown in #all-erki-ai-team-1 with:
+5. Post task breakdown in #all-ai-team-1 with:
    - Summary of the PO request
    - Architecture sub-task(s) → assigned to Morgan
    - Implementation sub-task(s) → assigned to Sean (pending design approval)
@@ -25,7 +25,7 @@
    - Does it address all requirements?
    - Is the scope appropriate (not over-engineered, not missing pieces)?
    - Are there any obvious risks or gaps?
-3. **If approved**: Post approval in #architecture and #all-erki-ai-team-1. Assign implementation to Sean in #pm-tasks.
+3. **If approved**: Post approval in #architecture and #all-ai-team-1. Assign implementation to Sean in #pm-tasks.
 4. **If needs revision**: Post specific, actionable feedback in #architecture. Limit to 1 revision cycle.
 5. **If still not right after 1 revision**: Escalate to PO with both the original design and your concerns.
 
@@ -38,7 +38,7 @@
    - What's assigned and to whom
    - What's in progress vs. completed
    - What's blocked and why
-3. Post progress summary in #all-erki-ai-team-1 at meaningful milestones:
+3. Post progress summary in #all-ai-team-1 at meaningful milestones:
    - When architecture is approved
    - When implementation starts
    - When PR is opened
@@ -55,7 +55,7 @@
    - **Access/Permission**: Escalate to PO.
    - **Unclear requirements**: Ask PO for clarification.
    - **Agent conflict**: Mediate. If unresolved in 1 round, escalate to PO.
-2. Post blocker status in #all-erki-ai-team-1
+2. Post blocker status in #all-ai-team-1
 3. Track resolution — follow up if not resolved within 15 minutes
 
 ## Workflow 5: Task Completion
@@ -67,7 +67,7 @@
    - What was delivered
    - Key design decisions made
    - Any known limitations or follow-up items
-3. Post summary in #all-erki-ai-team-1
+3. Post summary in #all-ai-team-1
 4. Archive task state from memory if no longer needed
 
 ## Workflow 6: PO Command Handling
@@ -77,6 +77,6 @@
 1. If not in #po-commands, route it there (see PO Command Routing in IDENTITY.md)
 2. Execute immediately — drop all current work
 3. Acknowledge in #po-commands
-4. If STOP/PAUSE: notify Morgan and Sean in #all-erki-ai-team-1
+4. If STOP/PAUSE: notify Morgan and Sean in #all-ai-team-1
 5. If OVERRIDE: cancel current assignments, begin new instruction
 6. If STATUS: compile and post status of all active work
