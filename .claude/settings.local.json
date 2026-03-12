@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(node --version 2>/dev/null && npm --version 2>/dev/null)",
+      "Bash(pip install:*)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec status --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions proposal --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions design --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions specs --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions tasks --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec status --change \"openclaw-ai-team-setup\" 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions apply --change \"openclaw-ai-team-setup\" --json 2>&1)",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions apply --change \"openclaw-ai-team-setup\" --json 2>&1 | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Progress: {d[\\\\\"progress\\\\\"][\\\\\"complete\\\\\"]}/{d[\\\\\"progress\\\\\"][\\\\\"total\\\\\"]} tasks complete'\\); remaining=[t for t in d['tasks'] if not t['done']]; [print\\(f'  - [ ] {t[\\\\\"description\\\\\"]}'\\) for t in remaining]\")",
+      "Bash(cd C:/Users/kriks/eclipse-workspace/OpenClawATeam && openspec instructions apply --change \"openclaw-ai-team-setup\" --json 2>&1 | grep -E '\"\\(complete|remaining|total\\)\"')",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
