@@ -1,4 +1,27 @@
 {
+  "slack_apps": [
+    {
+      "app_name": "emma-bot",
+      "agent": "Emma",
+      "role": "Project Lead",
+      "env_bot_token": "EMMA_SLACK_BOT_TOKEN",
+      "env_app_token": "EMMA_SLACK_APP_TOKEN"
+    },
+    {
+      "app_name": "morgan-bot",
+      "agent": "Morgan",
+      "role": "Architect",
+      "env_bot_token": "MORGAN_SLACK_BOT_TOKEN",
+      "env_app_token": "MORGAN_SLACK_APP_TOKEN"
+    },
+    {
+      "app_name": "sean-bot",
+      "agent": "Sean",
+      "role": "Developer & QA",
+      "env_bot_token": "SEAN_SLACK_BOT_TOKEN",
+      "env_app_token": "SEAN_SLACK_APP_TOKEN"
+    }
+  ],
   "channels": [
     {
       "name": "all-ai-team-1",

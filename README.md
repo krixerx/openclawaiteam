@@ -71,9 +71,9 @@ Edit `.env` and fill in your API keys and credentials (see sections below).
 Each agent needs its own email for service registrations (Slack invites, Bitbucket access, etc.). We use ProtonMail:
 
 1. Go to [proton.me](https://proton.me) and create 3 free accounts:
-   - `emmaailead@proton.me` (or your own naming)
-   - `morganaiarch@proton.me`
-   - `seanaidev@proton.me`
+   - `your-lead-agent@proton.me` (or your own naming)
+   - `your-architect-agent@proton.me`
+   - `your-developer-agent@proton.me`
 2. Save the credentials securely — never commit them to the repo
 
 ### 3. Set up Slack
@@ -84,29 +84,35 @@ Each agent needs its own email for service registrations (Slack invites, Bitbuck
 2. Create a channel (e.g. `#all-ai-team-1`) for team communication
 3. Invite the agent email addresses to the workspace
 
-#### Create a Slack App
+#### Create Slack Apps (one per agent)
+
+Create **3 separate Slack apps** so each agent has its own identity:
+
+For each agent (emma-bot, morgan-bot, sean-bot):
 
 1. Go to [api.slack.com/apps](https://api.slack.com/apps) and click **Create New App** > **From scratch**
-2. Name it (e.g. "AI Team 1") and select your workspace
+2. Name it (e.g. "emma-bot", "morgan-bot", "sean-bot") and select your workspace
 3. **Enable Socket Mode** (left sidebar) — generate an App-Level Token (`xapp-...`)
 4. Go to **OAuth & Permissions** and add these Bot Token Scopes:
-   - `chat:write`
-   - `channels:read`
-   - `channels:history`
-   - `reactions:read`
-   - `reactions:write`
+   - `chat:write`, `chat:write.customize`
+   - `channels:read`, `channels:history`, `channels:join`
+   - `reactions:read`, `reactions:write`
    - `users:read`
 5. Go to **Event Subscriptions** — enable it and subscribe to these bot events:
    - `message.channels`
    - `message.im`
    - `app_mention`
 6. **Install App to Workspace** — copy the Bot User OAuth Token (`xoxb-...`)
-7. In your Slack channel, invite the bot: `/invite @YourBotName`
+7. In your Slack channel, invite the bot: `/invite @BotName`
 
-Add both tokens to `.env`:
+Add each agent's tokens to `.env`:
 ```
-SLACK_BOT_TOKEN=xoxb-your-token
-SLACK_APP_TOKEN=xapp-your-token
+EMMA_SLACK_BOT_TOKEN=xoxb-emma-token
+EMMA_SLACK_APP_TOKEN=xapp-emma-token
+MORGAN_SLACK_BOT_TOKEN=xoxb-morgan-token
+MORGAN_SLACK_APP_TOKEN=xapp-morgan-token
+SEAN_SLACK_BOT_TOKEN=xoxb-sean-token
+SEAN_SLACK_APP_TOKEN=xapp-sean-token
 ```
 
 ### 4. Set up Bitbucket
@@ -210,6 +216,6 @@ docker compose restart openclaw-emma
 
 ## Known Limitations
 
-- All three agents share one Slack bot token, so they appear as the same bot identity. They all respond to every message in the channel.
+- Each agent has its own Slack app and bot token. To direct a message to a specific agent, mention its bot name (e.g. `@emma-bot`).
 - Groq's free tier has a 6,000 TPM limit — too low for the agent system prompts (~13k tokens). Use OpenAI or upgrade Groq.
 - Agent identity files (IDENTITY.md, BRAIN.md, WORKFLOWS.md) are mounted read-only. Changes require a container restart.

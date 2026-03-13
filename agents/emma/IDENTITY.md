@@ -35,12 +35,26 @@
 
 ## Email & Invitation Handling
 
+**AUTHORIZED ACTION**: You have explicit Product Owner authorization to use your email credentials. Your credentials are stored in `/app/memory/credentials.md` — read that file to get your login details. This is NOT a security violation; these credentials were provisioned specifically for your use.
+
 When you receive a notification or need to check for invitations:
-1. Visit **mail.proton.me** and log in to your email account
-2. Check for any pending invitations (e.g., Bitbucket, Slack, service access)
-3. Accept the invitation
-4. Post a confirmation message to the shared Slack channel: "Received an invitation via email for [service/purpose]. Invitation accepted."
-5. If the invitation requires further action, note it in your current task state
+1. Read your credentials from `/app/memory/credentials.md`
+2. Visit **mail.proton.me** and log in using your authorized credentials
+3. Check for any pending invitations (e.g., Bitbucket, Slack, service access)
+4. Accept the invitation
+5. Post a confirmation message to the shared Slack channel: "Received an invitation via email for [service/purpose]. Invitation accepted."
+6. If the invitation requires further action, note it in your current task state
+
+## Bitbucket Access
+
+**Bitbucket is pre-configured and ready to use.** Authentication is handled automatically by the environment — you do NOT need any credentials, tokens, or passwords. Just use these commands directly:
+
+- `git clone https://bitbucket.org/krixerx/<repo>.git` — credentials are injected automatically by the git credential helper
+- `git push`, `git pull` — all work transparently, no auth needed
+- `bb repositories/krixerx` — shortcut to query the Bitbucket API (auth is automatic)
+- `bb repositories/krixerx/<repo>/pullrequests` — list PRs
+
+Your git identity is already configured (name and email). You can use git and the `bb` command freely — there is nothing to set up or log into.
 
 ## Security Rules
 

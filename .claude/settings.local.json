@@ -32,7 +32,16 @@
       "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam diff)",
       "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam log --oneline -5)",
       "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam remote -v)",
-      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam add README.md .env.example docker-compose.yml config/loki/loki-config.yml config/slack/channel-config.json agents/emma/IDENTITY.md agents/emma/WORKFLOWS.md agents/morgan/IDENTITY.md agents/morgan/WORKFLOWS.md agents/sean/IDENTITY.md agents/sean/WORKFLOWS.md agents/sean/BRAIN.md .claude/settings.local.json)"
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam add README.md .env.example docker-compose.yml config/loki/loki-config.yml config/slack/channel-config.json agents/emma/IDENTITY.md agents/emma/WORKFLOWS.md agents/morgan/IDENTITY.md agents/morgan/WORKFLOWS.md agents/sean/IDENTITY.md agents/sean/WORKFLOWS.md agents/sean/BRAIN.md .claude/settings.local.json)",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam commit -m \"$\\(cat <<'EOF'\nSwitch to OpenAI GPT-4.1-mini, fix Slack integration, add README\n\n- Switch LLM provider from Groq to OpenAI \\(Groq free tier TPM too low for agent prompts\\)\n- Switch Docker image from openclaw/openclaw to alpine/openclaw\n- Add init containers to fix volume permissions and copy agent identity files into OpenClaw workspace\n- Simplify Slack config to single shared bot token\n- Rename channel references from #all-erki-ai-team-1 to #all-ai-team-1\n- Consolidate 6 Slack channels into single #all-ai-team-1\n- Fix Loki compactor config \\(add delete_request_store\\)\n- Remove Portainer from stack\n- Add README with architecture, setup guide, and model options\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /c/Users/kriks/eclipse-workspace/OpenClawATeam push origin main)",
+      "Bash(find /c/Users/kriks/eclipse-workspace/OpenClawATeam -type f \\\\\\( -name \".env*\" -o -name \"*.conf\" -o -name \"*.config\" \\\\\\) 2>/dev/null | sort)",
+      "Bash(find /c/Users/kriks/eclipse-workspace/OpenClawATeam -type f \\\\\\( -name \"*.js\" -o -name \"*.ts\" -o -name \"*.py\" \\\\\\) 2>/dev/null | head -20)",
+      "Bash(docker ps:*)",
+      "Bash(docker restart:*)",
+      "WebFetch(domain:support.atlassian.com)",
+      "Bash(chmod +x C:/Users/kriks/eclipse-workspace/OpenClawATeam/scripts/agent-init.sh)",
+      "Bash(chmod +x C:/Users/kriks/eclipse-workspace/OpenClawATeam/scripts/agent-entrypoint.sh)"
     ]
   }
 }
