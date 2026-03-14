@@ -23,16 +23,6 @@ chown node:node /app/memory
 # --- Store scripts and git config on state volume (persisted) ---
 mkdir -p /home/node/.openclaw/bin
 
-# Git credential helper
-cat > /home/node/.openclaw/bin/git-credential-bitbucket << 'SCRIPT'
-#!/bin/sh
-echo "protocol=https"
-echo "host=bitbucket.org"
-echo "username=$BITBUCKET_USERNAME"
-echo "password=$BITBUCKET_APP_PASSWORD"
-SCRIPT
-chmod +x /home/node/.openclaw/bin/git-credential-bitbucket
-
 # Bitbucket API wrapper
 cat > /home/node/.openclaw/bin/bb << 'SCRIPT'
 #!/bin/sh
@@ -40,13 +30,13 @@ curl -s -u "$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD" "https://api.bitbucket.
 SCRIPT
 chmod +x /home/node/.openclaw/bin/bb
 
-# Git config (stored on volume)
+# Git config (stored on volume) — uses credential store with file on volume
 cat > /home/node/.openclaw/.gitconfig << EOF
 [user]
 	name = $AGENT_NAME
 	email = $AGENT_EMAIL
 [credential]
-	helper = !/home/node/.openclaw/bin/git-credential-bitbucket
+	helper = store --file=/home/node/.openclaw/.git-credentials
 EOF
 
 # Profile script sourced on container start to set up PATH and gitconfig
@@ -65,7 +55,7 @@ if [ -f "$OPENCLAW_CONFIG" ]; then
     const cfg = JSON.parse(fs.readFileSync('$OPENCLAW_CONFIG', 'utf8'));
     if (!cfg.channels) cfg.channels = {};
     if (!cfg.channels.slack) cfg.channels.slack = {};
-    cfg.channels.slack.requireMention = true;
+    cfg.channels.slack.requireMention = false;
     if (!cfg.messages) cfg.messages = {};
     cfg.messages.ackReactionScope = 'all';
     fs.writeFileSync('$OPENCLAW_CONFIG', JSON.stringify(cfg, null, 2));

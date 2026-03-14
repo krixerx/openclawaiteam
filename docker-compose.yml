@@ -33,8 +33,11 @@ services:
       - SLACK_BOT_TOKEN=${EMMA_SLACK_BOT_TOKEN}
       - SLACK_APP_TOKEN=${EMMA_SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${EMMA_BITBUCKET_USERNAME}
+      - BITBUCKET_GIT_USERNAME=${EMMA_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${EMMA_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
+      - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - emma-state:/home/node/.openclaw
       - emma-memory:/app/memory
@@ -74,8 +77,11 @@ services:
       - SLACK_BOT_TOKEN=${MORGAN_SLACK_BOT_TOKEN}
       - SLACK_APP_TOKEN=${MORGAN_SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${MORGAN_BITBUCKET_USERNAME}
+      - BITBUCKET_GIT_USERNAME=${MORGAN_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${MORGAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
+      - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - morgan-state:/home/node/.openclaw
       - morgan-memory:/app/memory
@@ -115,8 +121,11 @@ services:
       - SLACK_BOT_TOKEN=${SEAN_SLACK_BOT_TOKEN}
       - SLACK_APP_TOKEN=${SEAN_SLACK_APP_TOKEN}
       - BITBUCKET_USERNAME=${SEAN_BITBUCKET_USERNAME}
+      - BITBUCKET_GIT_USERNAME=${SEAN_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${SEAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
+      - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - sean-state:/home/node/.openclaw
       - sean-memory:/app/memory

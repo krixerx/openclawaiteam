@@ -1,3 +1,4 @@
 .env
 *.log
 .claude/projects/
+.claude/settings.local.json
