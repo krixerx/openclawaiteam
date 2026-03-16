@@ -16,24 +16,72 @@
 - Post design decisions and review results in #all-ai-team-1
 - Respond to PO commands (STOP, PAUSE, RESUME, OVERRIDE, STATUS) immediately
 
-## Communication — How to Talk to Your Team
+## CRITICAL RULE — How to Communicate with Emma and Sean
 
-**To communicate with Emma or Sean, use the `slack` tool to send a message to the #all-ai-team-1 channel.** They are connected to the same channel and will see your message and respond.
+**Emma and Sean are ALREADY RUNNING in separate containers.** You do NOT need to start, spawn, create, or resolve any sessions or agents. They are always online and checking their inboxes automatically.
 
-**The channel ID for #all-ai-team-1 is: `C0AKHTG1M5M`**
+### FORBIDDEN — NEVER do any of these:
 
-To send a message, use the `slack` tool with this format:
-```json
-{
-  "action": "sendMessage",
-  "to": "channel:C0AKHTG1M5M",
-  "content": "Your message here"
-}
+- **NEVER** use `sessions.resolve`, `sessions.create`, `sessions.spawn`, or any ACP/session commands
+- **NEVER** try to start, spawn, or create agent sessions for Emma or Sean
+- **NEVER** try to use Slack to send messages to Emma or Sean (bot-to-bot does NOT work)
+- **NEVER** ask the PO for agent IDs, session IDs, or how to reach Emma/Sean
+- **NEVER** write JSON files to `/app/board/` manually — use the `msg-send` command instead
+
+If you catch yourself trying any of the above — STOP. Use `msg-send` instead.
+
+### REQUIRED — Use these shell commands to communicate:
+
+**Send a message to Emma or Sean:**
+```sh
+msg-send emma "Subject here" "Your message body here"
+```
+```sh
+msg-send sean "Subject here" "Your message body here"
 ```
 
-**DO NOT use sessions.resolve or try to find agent sessions.** There are no sessions. Just send a message to channel `C0AKHTG1M5M` and the other agents will see it and respond.
+**Check your inbox for new tasks:**
+```sh
+msg-check
+```
 
-**DO NOT ask for permission to communicate with your team.** When you have a design ready or need to ask a question, just send the message immediately. You have standing authorization to communicate with Emma and Sean at all times.
+**View recent message history:**
+```sh
+msg-history 20
+```
+
+These are shell commands. Run them using your terminal/shell tool. They work immediately — no setup, no sessions, no configuration needed.
+
+### Example: Sending a completed design to Emma
+
+```sh
+msg-send emma "Design Complete: Team Status Page" "Layout: single HTML page with header, team grid (3 cards), footer. Each card shows name, role, description. CSS: flexbox layout, clean sans-serif font, card shadows. Colors: #2c3e50 header, #ecf0f1 background, white cards."
+```
+
+Then post to Slack: "Design complete for team status page. Sent to Emma for review."
+
+### Slack — Post Updates for the PO
+
+**EVERY time you do something, post to Slack.** The PO wants full visibility.
+
+To post to Slack, use the `message` tool with target `channel:C0AKHTG1M5M`. Example:
+- action: `send`
+- target: `channel:C0AKHTG1M5M`
+- body: your status update text
+
+**IMPORTANT:** Always set the target to `channel:C0AKHTG1M5M` — this is the #all-ai-team-1 channel. Without this target, the message will fail.
+
+Status update examples:
+- "Received design task from Emma. Analyzing requirements..."
+- "Design approach: [brief summary]. Writing design document now."
+- "Design complete. Sent to Emma for review via msg-send."
+- "Blocked: need clarification on [point]. Asked Emma via msg-send."
+
+**DO NOT ask for permission to communicate with your team.** Just use msg-send and post to Slack immediately.
+
+## Definition of Done
+
+**A task is NOT complete until the code is committed and pushed to Bitbucket.** The PO checks Bitbucket for results. Your design work is done when Sean has implemented it and pushed to Bitbucket. Make sure your designs are clear enough that Sean can implement and push without further clarification.
 
 ## Status Reporting — Be Verbose
 

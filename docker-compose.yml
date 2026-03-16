@@ -14,6 +14,7 @@ services:
       - ./agents/emma/BRAIN.md:/tmp/agent/BRAIN.md:ro
       - ./agents/emma/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
       - ./scripts/agent-init.sh:/tmp/scripts/agent-init.sh:ro
+      - ./scripts/redis-msg.mjs:/tmp/scripts/redis-msg.mjs:ro
 
   openclaw-emma:
     image: alpine/openclaw:latest
@@ -22,6 +23,8 @@ services:
     depends_on:
       openclaw-emma-init:
         condition: service_completed_successfully
+      redis:
+        condition: service_started
     entrypoint: ["/tmp/scripts/agent-entrypoint.sh", "docker-entrypoint.sh"]
     command: ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
     environment:
@@ -36,6 +39,7 @@ services:
       - BITBUCKET_GIT_USERNAME=${EMMA_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${EMMA_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - REDIS_HOST=redis
       - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
       - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
@@ -58,6 +62,7 @@ services:
       - ./agents/morgan/BRAIN.md:/tmp/agent/BRAIN.md:ro
       - ./agents/morgan/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
       - ./scripts/agent-init.sh:/tmp/scripts/agent-init.sh:ro
+      - ./scripts/redis-msg.mjs:/tmp/scripts/redis-msg.mjs:ro
 
   openclaw-morgan:
     image: alpine/openclaw:latest
@@ -66,6 +71,8 @@ services:
     depends_on:
       openclaw-morgan-init:
         condition: service_completed_successfully
+      redis:
+        condition: service_started
     entrypoint: ["/tmp/scripts/agent-entrypoint.sh", "docker-entrypoint.sh"]
     command: ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
     environment:
@@ -80,6 +87,7 @@ services:
       - BITBUCKET_GIT_USERNAME=${MORGAN_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${MORGAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - REDIS_HOST=redis
       - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
       - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
@@ -102,6 +110,7 @@ services:
       - ./agents/sean/BRAIN.md:/tmp/agent/BRAIN.md:ro
       - ./agents/sean/WORKFLOWS.md:/tmp/agent/WORKFLOWS.md:ro
       - ./scripts/agent-init.sh:/tmp/scripts/agent-init.sh:ro
+      - ./scripts/redis-msg.mjs:/tmp/scripts/redis-msg.mjs:ro
 
   openclaw-sean:
     image: alpine/openclaw:latest
@@ -110,6 +119,8 @@ services:
     depends_on:
       openclaw-sean-init:
         condition: service_completed_successfully
+      redis:
+        condition: service_started
     entrypoint: ["/tmp/scripts/agent-entrypoint.sh", "docker-entrypoint.sh"]
     command: ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
     environment:
@@ -124,6 +135,7 @@ services:
       - BITBUCKET_GIT_USERNAME=${SEAN_BITBUCKET_GIT_USERNAME}
       - BITBUCKET_APP_PASSWORD=${SEAN_BITBUCKET_APP_PASSWORD}
       - BITBUCKET_WORKSPACE=${BITBUCKET_WORKSPACE}
+      - REDIS_HOST=redis
       - GIT_CONFIG_GLOBAL=/home/node/.openclaw/.gitconfig
       - PATH=/home/node/.openclaw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
@@ -134,6 +146,15 @@ services:
       - ai-team-net
 
   # === Shared Services ===
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - ai-team-net
 
   loki:
     image: grafana/loki:latest
@@ -187,5 +208,6 @@ volumes:
   morgan-memory:
   sean-state:
   sean-memory:
+  redis-data:
   loki-data:
   grafana-data:

@@ -1,6 +1,6 @@
 # OpenClaw AI Team
 
-An autonomous AI development team powered by [OpenClaw](https://hub.docker.com/r/alpine/openclaw) agents that communicate and collaborate via Slack. Three specialized AI agents — a project lead, an architect, and a developer — work together to deliver software tasks assigned by a human Product Owner.
+An autonomous AI development team powered by [OpenClaw](https://hub.docker.com/r/alpine/openclaw) agents. Three specialized AI agents — a project lead, an architect, and a developer — work together to deliver software tasks assigned by a human Product Owner.
 
 ## Architecture
 
@@ -11,7 +11,7 @@ An autonomous AI development team powered by [OpenClaw](https://hub.docker.com/r
                     |  (human)  |
                     +-----+-----+
                           |
-                    Slack messages
+                    Slack #all-ai-team-1
                           |
           +---------------+---------------+
           |               |               |
@@ -25,11 +25,41 @@ An autonomous AI development team powered by [OpenClaw](https://hub.docker.com/r
           |               |               |
           +-------+-------+-------+-------+
                   |               |
-            +-----+-----+  +-----+-----+
-            |   Slack   |  | Bitbucket |
-            | Workspace |  | Repos     |
-            +-----------+  +-----------+
+          +-------+-----+  +-----+-----+
+          |    Redis    |  | Bitbucket |
+          | (messaging) |  |  (code)   |
+          +-------------+  +-----------+
 ```
+
+### Communication Flow
+
+The agents use **two separate channels** for communication:
+
+| Channel | Purpose | How |
+|---------|---------|-----|
+| **Redis** | Agent-to-agent messaging | `msg-send`, `msg-check` shell commands |
+| **Slack** | PO visibility & commands | OpenClaw message tool → `channel:C0AKHTG1M5M` |
+
+**Why not Slack for everything?** Slack bot-to-bot messages are not delivered. Agents cannot talk to each other via Slack — only the human PO can message agents there.
+
+**Message flow for a typical task:**
+
+1. PO posts task in Slack → Emma receives it
+2. Emma sends design task to Morgan via Redis (`msg-send morgan ...`)
+3. Morgan's cron picks it up, produces design, sends back via Redis (`msg-send emma ...`)
+4. Emma approves, sends implementation task to Sean via Redis (`msg-send sean ...`)
+5. Sean implements, pushes to Bitbucket main branch, notifies Emma via Redis
+6. Each agent posts status updates to Slack at every step for PO visibility
+
+**Redis messaging commands** (available on all agent containers):
+
+```bash
+msg-send <to> "<subject>" "<body>"   # Send a message to another agent
+msg-check                             # Check inbox for new messages (pops & deletes)
+msg-history [count]                   # View recent message history (default: 20)
+```
+
+Messages are stored in Redis lists (`inbox:<agent>` for queues, `msg:history` for the last 100 messages). A cron job on each agent runs `msg-check` every 2 minutes to poll for new messages.
 
 ### Agents
 
@@ -37,14 +67,15 @@ An autonomous AI development team powered by [OpenClaw](https://hub.docker.com/r
 |-------|------|-----------------|
 | **Emma** | Project Lead | Receives tasks from PO, decomposes into sub-tasks, assigns work to Morgan and Sean, tracks progress, reports completion |
 | **Morgan** | Architect | Produces design documents and ADRs, reviews PRs for design compliance |
-| **Sean** | Developer & QA | Implements features per Morgan's designs, writes tests, opens PRs |
+| **Sean** | Developer & QA | Implements features per Morgan's designs, writes tests, pushes to main branch |
 
 ### Tech Stack
 
 - **Agent Runtime**: [OpenClaw](https://hub.docker.com/r/alpine/openclaw) (alpine/openclaw Docker image)
 - **LLM**: OpenAI GPT-4.1-mini (via OpenAI API)
-- **Communication**: Slack (Socket Mode)
-- **Source Control**: Bitbucket
+- **Agent-to-Agent Messaging**: Redis 7 (message queues via lists)
+- **PO Communication**: Slack (Socket Mode, one app per agent)
+- **Source Control**: Bitbucket (agents push directly to main)
 - **Observability**: Grafana + Loki + Promtail (log aggregation)
 - **Orchestration**: Docker Compose
 
@@ -137,36 +168,51 @@ SEAN_SLACK_APP_TOKEN=xapp-sean-token
 docker compose up -d
 ```
 
-### 7. Configure agents (first time only)
+On first start, the init containers will set up each agent's workspace, git config, Redis messaging scripts, and OpenClaw configuration automatically.
 
-After the containers start, configure each agent's model and Slack group policy:
+### 7. Verify agents are online
 
 ```bash
-# Set the LLM model
-docker exec openclaw-emma sh -c 'openclaw models set openai/gpt-4.1-mini'
-docker exec openclaw-morgan sh -c 'openclaw models set openai/gpt-4.1-mini'
-docker exec openclaw-sean sh -c 'openclaw models set openai/gpt-4.1-mini'
+# Check all containers are healthy
+docker ps
 
-# Allow the bot to respond in channels (not just DMs)
-docker exec openclaw-emma sh -c 'openclaw config set channels.slack.groupPolicy open'
-docker exec openclaw-morgan sh -c 'openclaw config set channels.slack.groupPolicy open'
-docker exec openclaw-sean sh -c 'openclaw config set channels.slack.groupPolicy open'
+# Verify Redis is running
+docker exec redis redis-cli ping
 
-# Restart to apply
-docker compose restart openclaw-emma openclaw-morgan openclaw-sean
+# Test messaging between agents
+docker exec openclaw-emma sh -c 'msg-send morgan "Test" "Hello from Emma"'
+docker exec openclaw-morgan sh -c 'msg-check'
 ```
 
-These settings are persisted in Docker volumes and survive restarts.
+Then message each agent once in Slack to establish their channel session:
+```
+@emma-bot You are online. Read IDENTITY.md and SOUL.md now.
+@morgan-bot You are online. Read IDENTITY.md and SOUL.md now.
+@sean-bot You are online. Read IDENTITY.md and SOUL.md now.
+```
 
 ## Usage
 
-Talk to the agents in Slack by mentioning the bot:
+Talk to Emma in Slack by mentioning her bot:
 
 ```
-@YourBotName build a REST API for user management
+@emma-bot In the ai-team-test-1 repo, add a contact form page. Morgan should design it, Sean should implement it.
 ```
 
-The Product Owner (you) gives tasks. Emma decomposes them, assigns architecture work to Morgan and design-approved implementation to Sean.
+Emma decomposes the task, assigns architecture to Morgan via Redis, reviews the design, then assigns implementation to Sean. Sean pushes directly to the main branch on Bitbucket. All agents post status updates to Slack so you can follow along.
+
+### Inspecting agent messages
+
+```bash
+# View last 20 messages across all agents
+docker exec openclaw-emma sh -c 'msg-history 20'
+
+# Check a specific agent's pending inbox
+docker exec redis redis-cli LRANGE inbox:morgan 0 -1
+
+# View full message history in Redis
+docker exec redis redis-cli LRANGE msg:history 0 -1
+```
 
 ## Project Structure
 
@@ -179,13 +225,14 @@ OpenClawATeam/
 │   │   └── WORKFLOWS.md
 │   ├── morgan/         # Morgan's identity, brain, and workflows
 │   └── sean/           # Sean's identity, brain, and workflows
+├── scripts/
+│   ├── agent-init.sh       # Init container: workspace setup, git config, messaging tools
+│   ├── agent-entrypoint.sh # Runtime: cron setup, git credentials, config patching
+│   └── redis-msg.mjs       # Redis messaging client (Node.js, no dependencies)
 ├── config/
-│   ├── slack/           # Slack channel config
 │   ├── grafana/         # Grafana dashboards and provisioning
 │   ├── loki/            # Loki log aggregation config
-│   ├── promtail/        # Promtail log shipper config
-│   ├── loop-detection.md
-│   └── po-commands.md
+│   └── promtail/        # Promtail log shipper config
 ├── docker-compose.yml
 ├── .env.example
 └── .env                 # Your local config (gitignored)
@@ -196,6 +243,7 @@ OpenClawATeam/
 - **Grafana**: http://localhost:3000 (default: admin/admin)
   - View agent logs aggregated by Loki
 - **Agent logs**: `docker logs openclaw-emma --tail 50`
+- **Redis messages**: `docker exec openclaw-emma sh -c 'msg-history'`
 
 ## LLM Model Options
 
@@ -216,6 +264,8 @@ docker compose restart openclaw-emma
 
 ## Known Limitations
 
-- Each agent has its own Slack app and bot token. To direct a message to a specific agent, mention its bot name (e.g. `@emma-bot`).
-- Groq's free tier has a 6,000 TPM limit — too low for the agent system prompts (~13k tokens). Use OpenAI or upgrade Groq.
-- Agent identity files (IDENTITY.md, BRAIN.md, WORKFLOWS.md) are mounted read-only. Changes require a container restart.
+- **Slack bot-to-bot**: Slack does not deliver messages between bots. All agent-to-agent communication goes through Redis.
+- **Cron polling**: Agents check their Redis inbox every 2 minutes via cron. This means a full Emma→Morgan→Sean round-trip has ~6 minutes of polling overhead.
+- **Slack channel session**: Each agent must be @mentioned once in Slack before cron-triggered Slack posts will work (establishes the channel session context).
+- **Groq free tier**: Has a 6,000 TPM limit — too low for agent system prompts (~13k tokens). Use OpenAI or upgrade Groq.
+- **Identity changes**: Agent identity files (IDENTITY.md, BRAIN.md, WORKFLOWS.md) are mounted read-only. Changes require a container restart.
